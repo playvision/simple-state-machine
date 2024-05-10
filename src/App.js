@@ -1,23 +1,17 @@
-import logo from './logo.svg';
 import './App.css';
+import Flow from './Flow';
+import { Flex, Text, Button } from '@radix-ui/themes';
+import SimpleComponent from './SimpleComponent';
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Flow />
+      <SimpleComponent />
+      <Button>
+        <Text>Hello</Text>
+      </Button>
     </div>
   );
 }
