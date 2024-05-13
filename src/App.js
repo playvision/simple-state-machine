@@ -1,18 +1,14 @@
 import './App.css';
 import Flow from './Flow';
-import { Flex, Text, Button } from '@radix-ui/themes';
-import SimpleComponent from './SimpleComponent';
+import { Box } from '@radix-ui/themes';
 
 
 function App() {
   return (
-    <div className="App">
+    // how to create app full screen height
+    <Box className="App" style={{height: '100vh'}}>
       <Flow />
-      <SimpleComponent />
-      <Button>
-        <Text>Hello</Text>
-      </Button>
-    </div>
+    </Box>
   );
 }
 

@@ -1,53 +1,40 @@
-import { useState, useCallback } from 'react';
-import { SlashIcon } from '@radix-ui/react-icons'
+import { useShallow } from 'zustand/react/shallow';
+
 
 import ReactFlow, {
-  Controls,
-  ControlButton,
   Background,
-  applyNodeChanges,
-  applyEdgeChanges,
-  addEdge,
+  Panel
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import BaseGameNode from './NodesDefenition/baseGameNode';
+import { Box } from '@radix-ui/themes';
+import BaseGameEdge from './NodesDefenition/baseGameEdge';
+import Menu from './Menu';
 
-let id = 1;
-const getId = () => `${id++}`;
+import useNodesStore from './NodeStore.ts';
 
-const initialNodes = [
-  {
-    id: getId(),
-    type: 'baseGameNode',
-    position: { x: getId()*50, y: getId()*50 },
-  }
-];
 
-const initialEdges = [];
 
 const nodeTypes = { baseGameNode: BaseGameNode };
 
+const edgeTypes = { baseGameEdge: BaseGameEdge};
+
+const selector = (state) => ({
+  nodes: state.nodes,
+  edges: state.edges,
+  onNodesChange: state.onNodesChange,
+  onEdgesChange: state.onEdgesChange,
+  onConnect: state.onConnect,
+});
 
 function Flow() {
-  const [nodes, setNodes] = useState(initialNodes);
-  const [edges, setEdges] = useState(initialEdges);
-
-  const onNodesChange = useCallback(
-    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    [],
-  );
-  const onEdgesChange = useCallback(
-    (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-    [],
-  );
-
-  const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    [],
+  
+  const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useNodesStore(
+    useShallow(selector),
   );
 
   return (
-    <div style={{ height: '500px' }}>
+    <Box height="100%">
       <ReactFlow
         nodes={nodes}
         onNodesChange={onNodesChange}
@@ -55,24 +42,21 @@ function Flow() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         fitView
       >
+      <Panel position="top-left" style={{
+        padding: '0px',
+        margin: '0px',
+        height: '100vh',
+        width: '350px',
+      }
+        }>
+        <Menu />
+      </Panel>
         <Background />
-        <Controls>
-        <ControlButton onClick={() => {
-          console.log("add new node");
-            let newNode= {
-              id: getId(),
-              type: 'baseGameNode',
-              position: { x: getId()*50, y: getId()*50 }};
-              
-          setNodes((nds) => nds.concat(newNode));
-        }}>
-          <SlashIcon />
-        </ControlButton>
-        </Controls>
       </ReactFlow>
-    </div>
+    </Box>
   );
 }
 
