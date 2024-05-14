@@ -1,11 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { Flex, Button, Text, Box, Heading, Container, TextField } from '@radix-ui/themes';
-import useNodesStore from '../NodeStore.ts';
+import React, { useState, useEffect } from "react";
+import {
+  Flex,
+  Button,
+  Text,
+  Box,
+  Heading,
+  Container,
+  TextField,
+} from "@radix-ui/themes";
+import useNodesStore from "../../NodeStore.ts";
 
 export default function EditEdgePanel() {
-  const { getSelectedEdge, removeSelectedEdge, isEdgeIdUnique, updateEdgeId } = useNodesStore();
+  const { getSelectedEdge, removeSelectedEdge, isEdgeIdUnique, updateEdgeId } =
+    useNodesStore();
   const selectedEdge = getSelectedEdge();
-  const [newEdgeId, setNewEdgeId] = useState(selectedEdge ? selectedEdge.id : '');
+  const [newEdgeId, setNewEdgeId] = useState(
+    selectedEdge ? selectedEdge.id : ""
+  );
   const [isUnique, setIsUnique] = useState(true);
 
   useEffect(() => {
@@ -29,24 +40,21 @@ export default function EditEdgePanel() {
   return (
     <Flex direction="column" gap="3">
       <Text>{selectedEdge?.id}</Text>
-      <Box
-        style={{
-          background: "var(--gray-a2)",
-          border: "1px dashed var(--gray-a7)",
-        }}
-        p="4"
-      >
         <Heading mb="1" size="3">
           Edit Edge
         </Heading>
-        <Text>
-          {JSON.stringify(selectedEdge)}
+        <Text as="label">
+          Edge Id
+          <TextField.Root
+            radius="large"
+            placeholder="Edge ID"
+            value={newEdgeId}
+            onChange={handleIdChange}
+          />
         </Text>
-        <TextField.Root radius="large" placeholder="Edge ID" 
-        value={newEdgeId} onChange={handleIdChange} />
 
         {!isUnique && <Text color="red">ID must be unique</Text>}
-      </Box>
+      
       <Container />
       <Button
         variant="soft"

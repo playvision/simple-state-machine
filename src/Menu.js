@@ -1,7 +1,7 @@
 import { Box, Button, Container, Flex, Heading, Text } from "@radix-ui/themes";
 import useNodesStore from "./NodeStore.ts";
-import EditNodePanel from "./Inspectors/EditNodePanel.js";
-import EditEdgePanel from "./Inspectors/EditEdgePanel.js";
+import EditNodePanel from "./Inspectors/NodeEditor/EditNodePanel.js";
+import EditEdgePanel from "./Inspectors/EdgeEditor/EditEdgePanel.js";
 
 export default function Menu() {
   const { addNewNode, getSelectedNode, getSelectedEdge } = useNodesStore();
