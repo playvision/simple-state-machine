@@ -32,7 +32,7 @@ export default function BaseGameEdge({
       <BaseEdge
         id={id}
         path={edgePath}
-        style={{ stroke: "#000", strokeWidth: 2 }}
+        style={{ stroke: "var(--accent-8)", strokeWidth: 2 }}
       />
       <EdgeLabelRenderer>
         <Box

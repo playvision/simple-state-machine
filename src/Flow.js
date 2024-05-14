@@ -1,15 +1,14 @@
 import { useShallow } from 'zustand/react/shallow';
-
-
 import ReactFlow, {
   Background,
   Panel
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import BaseGameNode from './NodesDefenition/baseGameNode';
 import { Box } from '@radix-ui/themes';
-import BaseGameEdge from './NodesDefenition/baseGameEdge';
 import Menu from './Menu';
+
+import BaseGameNode from './FlowHelpers/BaseGameNode.js';
+import BaseGameEdge from './FlowHelpers/BaseGameEdge.js';
 
 import useNodesStore from './NodeStore.ts';
 
