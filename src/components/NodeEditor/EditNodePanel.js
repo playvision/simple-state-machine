@@ -5,9 +5,9 @@ import {
   Container,
 } from "@radix-ui/themes";
 import useNodesStore from "../../NodeStore.ts";
-import NodeIdField from "./NodeIdField";
-import NodeImage from "./NodeImage";
-import NodeDescription from "./NodeDescription";
+import NodeIdField from "./NodeIdField.js";
+import NodeImage from "./NodeImage.js";
+import NodeDescription from "./NodeDescription.js";
 
 export default function EditNodePanel() {
   const {

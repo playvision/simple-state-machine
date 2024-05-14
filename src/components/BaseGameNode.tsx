@@ -1,9 +1,18 @@
-import { useCallback } from "react";
+import React, { useCallback } from "react";
 import { Handle, Position } from "reactflow";
 import { Flex, Box, Heading, Text } from "@radix-ui/themes";
 
-function BaseGameNode({ id, data, isConnectable }) {
-  const onChange = useCallback((evt) => {
+type BaseGameNodeProps = {
+  id: string;
+  data: {
+    description: string;
+    image?: string;
+  };
+  isConnectable: boolean;
+};
+
+const BaseGameNode: React.FC<BaseGameNodeProps> = ({ id, data, isConnectable }) => {
+  const onChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
     console.log(evt.target.value);
   }, []);
 
@@ -25,7 +34,18 @@ function BaseGameNode({ id, data, isConnectable }) {
       <Flex direction="column" gap="3">
         <Heading as="h2">Node</Heading>
         <Text>Node ID: {id}</Text>
-        {data.image && <img src={data.image} alt="Node" style={{ objectFit: "cover", width: "100%", height: "100px", borderRadius: "var(--radius-2)" }} />}
+        {data.image && (
+          <img
+            src={data.image}
+            alt="Node"
+            style={{
+              objectFit: "cover",
+              width: "100%",
+              height: "100px",
+              borderRadius: "var(--radius-2)"
+            }}
+          />
+        )}
         <Text>{data.description}</Text>
       </Flex>
       <Handle
@@ -36,6 +56,6 @@ function BaseGameNode({ id, data, isConnectable }) {
       />
     </Box>
   );
-}
+};
 
 export default BaseGameNode;

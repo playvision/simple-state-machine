@@ -5,17 +5,17 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { Box } from '@radix-ui/themes';
-import Menu from './Menu';
+import Menu from './components/Menu.tsx';
 
-import BaseGameNode from './FlowHelpers/BaseGameNode.js';
-import BaseGameEdge from './FlowHelpers/BaseGameEdge.js';
+
 
 import useNodesStore from './NodeStore.ts';
+import BaseGameNode from './components/BaseGameNode.tsx';
+import BaseGameEdge from './components/BaseGameEdge.tsx';
 
 
 
 const nodeTypes = { baseGameNode: BaseGameNode };
-
 const edgeTypes = { baseGameEdge: BaseGameEdge};
 
 const selector = (state) => ({

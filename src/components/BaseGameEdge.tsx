@@ -1,17 +1,27 @@
+import React from 'react';
 import {
   BaseEdge,
   EdgeLabelRenderer,
 } from "reactflow";
 import { Text, Box } from "@radix-ui/themes";
 
-export default function BaseGameEdge({
+type BaseGameEdgeProps = {
+  id: string;
+  sourceX: number;
+  sourceY: number;
+  targetX: number;
+  targetY: number;
+  data?: any; // You can define the exact type if you know the structure of data
+};
+
+const BaseGameEdge: React.FC<BaseGameEdgeProps> = ({
   id,
   sourceX,
   sourceY,
   targetX,
   targetY,
   data, 
-}) {
+}) => {
   const verticalOffset = 80; // Смещение вниз для создания кривой
 
   // Настройка контрольных точек для создания изгиба вниз
@@ -47,12 +57,12 @@ export default function BaseGameEdge({
             color: "var(--color-text)",
             border: "1px solid var(--gray-a7)",
           }}
-          size="1"
-          placeholder="Trigger ID"
         >
           <Text>{id}</Text>
         </Box>
       </EdgeLabelRenderer>
     </>
   );
-}
+};
+
+export default BaseGameEdge;
