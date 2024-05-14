@@ -11,7 +11,7 @@ root.render(
   <React.StrictMode>
       <Theme>
     <App />
-    <ThemePanel />
+    {/* <ThemePanel /> */}
    </Theme> 
   </React.StrictMode>
 
