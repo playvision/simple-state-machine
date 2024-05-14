@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { Handle, Position } from "reactflow";
-import { Flex, TextField, TextArea, Button, Text, Box } from "@radix-ui/themes";
+import { Flex, Box, Heading, Text } from "@radix-ui/themes";
 
-function BaseGameNode({ data, isConnectable }) {
+function BaseGameNode({ id, data, isConnectable }) {
   const onChange = useCallback((evt) => {
     console.log(evt.target.value);
   }, []);
@@ -23,10 +23,11 @@ function BaseGameNode({ data, isConnectable }) {
         isConnectable={isConnectable}
       />
       <Flex direction="column" gap="3">
-        <TextField.Root size="1" placeholder="State ID" />
-        <TextArea placeholder="State description" />
+        <Heading as="h2">Node</Heading>
+        <Text>Node ID: {id}</Text>
+        {data.image && <img src={data.image} alt="Node" style={{ objectFit: "cover", width: "100%", height: "100px", borderRadius: "var(--radius-2)" }} />}
+        <Text>{data.description}</Text>
       </Flex>
-
       <Handle
         type="source"
         position={Position.Bottom}

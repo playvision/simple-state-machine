@@ -14,6 +14,11 @@ import {
   applyEdgeChanges,
 } from 'reactflow';
 
+type NodeData = {
+  description: string;
+  image: string; // base64 image
+};
+
 type RFState = {
   nodes: Node[];
   edges: Edge[];
@@ -24,6 +29,9 @@ type RFState = {
   setEdges: (edges: Edge[]) => void;
   addNewNode: () => void;
   removeSelectedNode: () => void;
+  isNodeIdUnique: (id: string) => boolean;
+  updateNodeId: (oldId: string, newId: string) => void;
+  updateNodeData: (id: string, data: Partial<NodeData>) => void;
   removeSelectedEdge: () => void;
   getSelectedNode: () => Node | null;
   getSelectedEdge: () => Edge | null;
@@ -71,7 +79,10 @@ const useNodesStore = create<RFState>((set, get) => ({
       id: nanoid(10),
       type: 'baseGameNode',
       position: { x: 250, y: 250 },
-      data: {} // Add the missing 'data' property
+      data: {
+        description: '',
+        image: ''
+      }
     };
     set({ nodes: [...get().nodes, newNode] });
   },
@@ -102,7 +113,28 @@ const useNodesStore = create<RFState>((set, get) => ({
       return edge;
     });
     set({ edges });
-  }
+  },
+  isNodeIdUnique: (id: string) => {
+    return !get().nodes.some((node) => node.id === id);
+  },
+  updateNodeId: (oldId: string, newId: string) => {
+    const nodes = get().nodes.map((node) => {
+      if (node.id === oldId) {
+        return { ...node, id: newId };
+      }
+      return node;
+    });
+    set({ nodes });
+  },
+  updateNodeData: (id: string, data: Partial<NodeData>) => {
+    const nodes = get().nodes.map((node) => {
+      if (node.id === id) {
+        return { ...node, data: { ...node.data, ...data } };
+      }
+      return node;
+    });
+    set({ nodes });
+  },
 }));
 
 export default useNodesStore;

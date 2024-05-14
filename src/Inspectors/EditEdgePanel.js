@@ -42,7 +42,7 @@ export default function EditEdgePanel() {
         <Text>
           {JSON.stringify(selectedEdge)}
         </Text>
-        <TextField.Root radius="large" placeholder="Search the docs…" 
+        <TextField.Root radius="large" placeholder="Edge ID" 
         value={newEdgeId} onChange={handleIdChange} />
 
         {!isUnique && <Text color="red">ID must be unique</Text>}

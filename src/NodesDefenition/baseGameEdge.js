@@ -12,7 +12,7 @@ export default function BaseGameEdge({
   targetY,
   data, 
 }) {
-  const verticalOffset = 50; // Смещение вниз для создания кривой
+  const verticalOffset = 80; // Смещение вниз для создания кривой
 
   // Настройка контрольных точек для создания изгиба вниз
   const controlPoint1X = sourceX;
@@ -22,6 +22,10 @@ export default function BaseGameEdge({
 
   // Создаем кривую Безье, которая изгибается вниз
   const edgePath = `M ${sourceX},${sourceY} C ${controlPoint1X},${controlPoint1Y} ${controlPoint2X},${controlPoint2Y} ${targetX},${targetY}`;
+
+  // Вычисляем положение центра кривой Безье для правильного позиционирования текста
+  const midX = (sourceX + controlPoint1X + controlPoint2X + targetX) / 4;
+  const midY = (sourceY + controlPoint1Y + controlPoint2Y + targetY) / 4;
 
   return (
     <>
@@ -34,7 +38,7 @@ export default function BaseGameEdge({
         <Box
           style={{
             position: "absolute",
-            transform: `translate(-50%, -50%) translate(${(sourceX + targetX) / 2}px,${(sourceY + targetY + 2 * verticalOffset) / 2}px)`,
+            transform: `translate(-50%, -50%) translate(${midX}px, ${midY}px)`,
             pointerEvents: "all",
             borderRadius: "var(--radius-6)",
             margin: "var(--space-2)",
