@@ -24,7 +24,7 @@ const Menu: React.FC = () => {
   return (
     <Flex direction="column" gap="3" style={styles}>
       <Heading as="h2">Welcome to SSM Editor</Heading>
-      <Link href="https://github.com/playvision/simple-state-machine" color="gray" size="2" mt="-4">by Playvision</Link>
+      <Link href="https://github.com/playvision/simple-state-machine" target="_blank" color="gray" size="2" mt="-4">by Playvision</Link>
 
 
       <Container>
