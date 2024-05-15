@@ -32,8 +32,7 @@ const BaseGameNode: React.FC<BaseGameNodeProps> = ({ id, data, isConnectable }) 
         isConnectable={isConnectable}
       />
       <Flex direction="column" gap="3">
-        <Heading as="h2">Node</Heading>
-        <Text>Node ID: {id}</Text>
+        <Heading as="h2">{id}</Heading>
         {data.image && (
           <img
             src={data.image}

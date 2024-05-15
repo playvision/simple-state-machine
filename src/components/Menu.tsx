@@ -5,6 +5,7 @@ import { InfoCircledIcon } from "@radix-ui/react-icons";
 import useNodesStore from "../NodeStore.ts";
 import EditNodePanel from "./NodeEditor/EditNodePanel";
 import EditEdgePanel from "./EditEdgePanel.tsx";
+import ExportConfigDialog from './ExportConfigDialog.tsx';
 
 const Menu: React.FC = () => {
   const { addNewNode, getSelectedNode, getSelectedEdge } = useNodesStore();
@@ -22,12 +23,6 @@ const Menu: React.FC = () => {
     <Flex direction="column" gap="3" style={styles}>
       <Heading as="h2">Inspector</Heading>
       
-      {selectedEdge && (
-        <Text>
-          Selected Edge: {selectedEdge.id}
-        </Text>
-      )}
-
       {selectedNode && <EditNodePanel />}
       {selectedEdge && <EditEdgePanel />}
       {!selectedNode && !selectedEdge && (
@@ -49,6 +44,7 @@ const Menu: React.FC = () => {
       >
         <Button onClick={addNewNode}>Add node</Button>
         <Button variant="surface">Save</Button>
+        <ExportConfigDialog />
       </Flex>
     </Flex>
   );

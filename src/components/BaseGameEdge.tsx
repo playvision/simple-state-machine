@@ -4,6 +4,7 @@ import {
   EdgeLabelRenderer,
 } from "reactflow";
 import { Text, Box } from "@radix-ui/themes";
+import useNodesStore from "../NodeStore.ts";
 
 type BaseGameEdgeProps = {
   id: string;
@@ -37,6 +38,11 @@ const BaseGameEdge: React.FC<BaseGameEdgeProps> = ({
   const midX = (sourceX + controlPoint1X + controlPoint2X + targetX) / 4;
   const midY = (sourceY + controlPoint1Y + controlPoint2Y + targetY) / 4;
 
+  const edges = useNodesStore((state) => state.edges);
+
+  // Подсчитываем количество повторений triggerName
+  const triggerNameCount = edges.filter(edge => edge.data.triggerName === data.triggerName).length;
+
   return (
     <>
       <BaseEdge
@@ -58,7 +64,9 @@ const BaseGameEdge: React.FC<BaseGameEdgeProps> = ({
             border: "1px solid var(--gray-a7)",
           }}
         >
-          <Text>{id}</Text>
+          <Text>
+            {data.triggerName} {triggerNameCount > 1 && `(${triggerNameCount})`}
+          </Text>
         </Box>
       </EdgeLabelRenderer>
     </>

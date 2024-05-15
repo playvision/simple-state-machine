@@ -37,6 +37,8 @@ type RFState = {
   getSelectedEdge: () => Edge | null;
   isEdgeIdUnique: (id: string) => boolean;
   updateEdgeId: (oldId: string, newId: string) => void;
+  updateEdgeTriggerName: (id: string, triggerName: string) => void;
+  generateConfig: () => any;
 };
 
 const useNodesStore = create<RFState>((set, get) => ({
@@ -62,6 +64,9 @@ const useNodesStore = create<RFState>((set, get) => ({
       target: params.target!,
       sourceHandle: params.sourceHandle ?? undefined,
       targetHandle: params.targetHandle ?? undefined,
+      data: {
+        triggerName: 'new_trigger_name',
+      },
     };
     set({
       edges: addEdge(newEdge, get().edges),
@@ -76,7 +81,7 @@ const useNodesStore = create<RFState>((set, get) => ({
   addNewNode: () => {
     console.log('addNewNode');
     const newNode: Node = {
-      id: nanoid(10),
+      id: `new_node_${nanoid(4)}`,
       type: 'baseGameNode',
       position: { x: 250, y: 250 },
       data: {
@@ -118,13 +123,23 @@ const useNodesStore = create<RFState>((set, get) => ({
     return !get().nodes.some((node) => node.id === id);
   },
   updateNodeId: (oldId: string, newId: string) => {
+    // update node and save all edges
     const nodes = get().nodes.map((node) => {
       if (node.id === oldId) {
         return { ...node, id: newId };
       }
       return node;
     });
-    set({ nodes });
+    const edges = get().edges.map((edge) => {
+      if (edge.source === oldId) {
+        return { ...edge, source: newId };
+      }
+      if (edge.target === oldId) {
+        return { ...edge, target: newId };
+      }
+      return edge;
+    });
+    set({ nodes, edges });
   },
   updateNodeData: (id: string, data: Partial<NodeData>) => {
     const nodes = get().nodes.map((node) => {
@@ -134,6 +149,40 @@ const useNodesStore = create<RFState>((set, get) => ({
       return node;
     });
     set({ nodes });
+  },
+  updateEdgeTriggerName: (id: string, triggerName: string) => {
+    const edges = get().edges.map((edge) => {
+      if (edge.id === id) {
+        return { ...edge, data: { ...edge.data, triggerName } };
+      }
+      return edge;
+    });
+    set({ edges });
+  },
+  generateConfig: () => {
+    const nodes = get().nodes;
+    const edges = get().edges;
+
+    const states = nodes.reduce((acc, node) => {
+      acc[node.id] = {
+        description: node.data.description,
+        transitions: []
+      };
+      return acc;
+    }, {});
+
+    edges.forEach((edge) => {
+      if (states[edge.source]) {
+        states[edge.source].transitions.push({
+          to: edge.target,
+          trigger: edge.data.triggerName
+        });
+      }
+    });
+
+    return {
+      states
+    };
   },
 }));
 

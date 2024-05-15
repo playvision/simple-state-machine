@@ -13,73 +13,55 @@ const EditEdgePanel: React.FC = () => {
   const {
     getSelectedEdge,
     removeSelectedEdge,
-    isEdgeIdUnique,
-    updateEdgeId,
+    updateEdgeTriggerName,
   } = useNodesStore((state) => ({
     getSelectedEdge: state.getSelectedEdge,
     removeSelectedEdge: state.removeSelectedEdge,
-    isEdgeIdUnique: state.isEdgeIdUnique,
-    updateEdgeId: state.updateEdgeId,
+    updateEdgeTriggerName: state.updateEdgeTriggerName,
   }));
 
   const selectedEdge = getSelectedEdge();
 
-  const [newEdgeId, setNewEdgeId] = useState<string>(selectedEdge?.id || "");
-  const [isUnique, setIsUnique] = useState<boolean>(true);
+  const [triggerName, setTriggerName] = useState<string>(selectedEdge?.data.triggerName || "");
 
   useEffect(() => {
-    console.log("Selected Edge:", selectedEdge); // Логирование для отладки
     if (selectedEdge) {
-      setNewEdgeId(selectedEdge.id);
+      setTriggerName(selectedEdge.data.triggerName);
     } else {
-      setNewEdgeId("");
+      setTriggerName("");
     }
   }, [selectedEdge]);
 
-  useEffect(() => {
-    if (newEdgeId !== selectedEdge?.id) {
-      setIsUnique(isEdgeIdUnique(newEdgeId));
-    } else {
-      setIsUnique(true);
-    }
-  }, [newEdgeId, selectedEdge, isEdgeIdUnique]);
-
-  const handleIdChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewEdgeId(e.target.value);
+  const handleTriggerNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setTriggerName(e.target.value);
   };
 
   const handleSave = () => {
-    if (selectedEdge && isUnique) {
-      updateEdgeId(selectedEdge.id, newEdgeId);
+    if (selectedEdge) {
+      updateEdgeTriggerName(selectedEdge.id, triggerName);
     }
   };
 
   return (
     <Flex direction="column" gap="3">
-      {selectedEdge && <Text>Selected Edge: {selectedEdge.id}</Text>}
       <Heading mb="1" size="3">
         Edit Edge
       </Heading>
-      <Text as="label">
-        Edge Id
-        <TextField.Root
-          radius="large"
-          placeholder="Edge ID"
-          value={newEdgeId}
-          onChange={handleIdChange}
-        />
-      </Text>
-
-      {!isUnique && <Text color="red">ID must be unique</Text>}
-
+      <Text as="label">TriggerName:</Text>
+      <TextField.Root
+        radius="large"
+        placeholder="Trigger Name"
+        value={triggerName}
+        onChange={handleTriggerNameChange}
+      />
       <Container />
       <Button
         variant="soft"
-        disabled={!selectedEdge || !isUnique}
+        disabled={!selectedEdge}
         color="green"
         onClick={handleSave}
       >
-        Save ID
+        Save Trigger Name
       </Button>
       <Button
         variant="soft"
