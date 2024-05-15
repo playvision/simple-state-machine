@@ -20,7 +20,7 @@ const ExportProjectButton: React.FC = () => {
 
   return (
     <div style={{width: '100%'}}>
-    <Button style={{width: '100%'}} variant="soft" color="blue"  onClick={handleExport} disabled={isProjectGenerated}>
+    <Button style={{width: '100%'}} variant="soft"  onClick={handleExport} disabled={isProjectGenerated}>
       Export Project
     </Button>
     </div>

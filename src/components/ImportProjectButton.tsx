@@ -31,7 +31,7 @@ const ImportProjectButton: React.FC = () => {
       />
       <label htmlFor="import-project-json">
       <Tooltip content="Import project file">
-        <IconButton onClick={() => {
+        <IconButton variant="soft" onClick={() => {
             const input = document.getElementById("import-project-json");
             if (input) {
                 input.click();

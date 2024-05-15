@@ -1,5 +1,5 @@
 import React from 'react';
-import { Callout, Button, Container, Flex, Heading, Text, Box, Blockquote } from "@radix-ui/themes";
+import { Callout, Button, Container, Flex, Heading, Text, Box, Blockquote, Separator } from "@radix-ui/themes";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 
 import useNodesStore from "../NodeStore.ts";
@@ -39,6 +39,7 @@ const Menu: React.FC = () => {
                 Select a node or edge to edit
               </Callout.Text>
             </Callout.Root>
+            <Separator my="3" size="4" />
             <Flex mt={'2'} direction="column" gap="3" >
               <Flex direction="row" gap="3" justify={"between"}>
               <ExportProjectButton />

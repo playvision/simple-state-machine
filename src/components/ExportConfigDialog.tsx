@@ -27,7 +27,7 @@ const ExportConfigDialog: React.FC = () => {
 
   return (
     <>
-      <Button variant="soft" color="blue" onClick={handleExport}>
+      <Button variant="solid" onClick={handleExport}>
         Export Config
       </Button>
 
