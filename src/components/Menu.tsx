@@ -24,6 +24,7 @@ const Menu: React.FC = () => {
   return (
     <Flex direction="column" gap="3" style={styles}>
       <Heading as="h2">Welcome to SSM Editor</Heading>
+      <Text as="p" mt={'-4'} size="2" color="gray">by Playvision</Text>
 
 
       <Container>
