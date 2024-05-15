@@ -1,9 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Flex,
-  Button,
-  Container,
-} from "@radix-ui/themes";
+import { Flex, Button, Container } from "@radix-ui/themes";
 import useNodesStore from "../../NodeStore.ts";
 import NodeIdField from "./NodeIdField.js";
 import NodeImage from "./NodeImage.js";
@@ -102,34 +98,40 @@ export default function EditNodePanel() {
 
   return (
     <Flex direction="column" gap="3" ref={panelRef}>
-      <NodeIdField
-        newNodeId={newNodeId}
-        isUnique={isUnique}
-        handleIdChange={handleIdChange}
-      />
-      <NodeImage
-        image={image}
-        handleRemoveImage={handleRemoveImage}
-        handleUploadClick={handleUploadClick}
-        fileInputRef={fileInputRef}
-        handleImageChange={handleImageChange}
-      />
-      <NodeDescription
-        description={description}
-        isEditingDescription={isEditingDescription}
-        setIsEditingDescription={setIsEditingDescription}
-        handleDescriptionChange={handleDescriptionChange}
-        handleDescriptionBlur={handleDescriptionBlur}
-      />
+      {selectedNode && selectedNode.type !== 'anyStateNode' && (
+        <>
+          <NodeIdField
+            newNodeId={newNodeId}
+            isUnique={isUnique}
+            handleIdChange={handleIdChange}
+          />
+          <NodeImage
+            image={image}
+            handleRemoveImage={handleRemoveImage}
+            handleUploadClick={handleUploadClick}
+            fileInputRef={fileInputRef}
+            handleImageChange={handleImageChange}
+          />
+          <NodeDescription
+            description={description}
+            isEditingDescription={isEditingDescription}
+            setIsEditingDescription={setIsEditingDescription}
+            handleDescriptionChange={handleDescriptionChange}
+            handleDescriptionBlur={handleDescriptionBlur}
+          />
+        </>
+      )}
       <Container />
-      <Button
-        variant="soft"
-        disabled={!selectedNode || !isUnique}
-        color="green"
-        onClick={handleSave}
-      >
-        Save
-      </Button>
+      {selectedNode && selectedNode.type !== 'anyStateNode' && (
+        <Button
+          variant="soft"
+          disabled={!selectedNode || !isUnique}
+          color="green"
+          onClick={handleSave}
+        >
+          Save
+        </Button>
+      )}
       <Button
         variant="soft"
         disabled={!selectedNode}

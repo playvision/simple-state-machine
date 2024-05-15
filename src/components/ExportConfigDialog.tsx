@@ -32,7 +32,7 @@ const ExportConfigDialog: React.FC = () => {
       </Button>
 
       <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-        <Dialog.Trigger asChild>
+        <Dialog.Trigger>
           <Button style={{ display: 'none' }}>Hidden Trigger</Button>
         </Dialog.Trigger>
         <Dialog.Content style={{ width: '90vw', height: '90vh', overflow: 'hidden' }}>
@@ -41,7 +41,7 @@ const ExportConfigDialog: React.FC = () => {
             Below is the generated configuration for your state machine. You can review it before downloading.
           </Dialog.Description>
           <ScrollArea type="always" scrollbars="vertical" style={{ height: '70vh', width: '100%' }}>
-            <Code as="pre" style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+            <Code style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
               {config}
             </Code>
           </ScrollArea>

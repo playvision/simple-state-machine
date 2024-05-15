@@ -12,10 +12,11 @@ import Menu from './components/Menu.tsx';
 import useNodesStore from './NodeStore.ts';
 import BaseGameNode from './components/BaseGameNode.tsx';
 import BaseGameEdge from './components/BaseGameEdge.tsx';
+import AnyStateNode from './components/AnyStateNode.tsx';
 
 
 
-const nodeTypes = { baseGameNode: BaseGameNode };
+const nodeTypes = { baseGameNode: BaseGameNode, anyStateNode: AnyStateNode };
 const edgeTypes = { baseGameEdge: BaseGameEdge};
 
 const selector = (state) => ({

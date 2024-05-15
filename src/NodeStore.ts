@@ -27,7 +27,8 @@ type RFState = {
   onConnect: OnConnect;
   setNodes: (nodes: Node[]) => void;
   setEdges: (edges: Edge[]) => void;
-  addNewNode: () => void;
+  addNewBaseNode: () => void;
+  addNewAnyStateNode: () => void;
   removeSelectedNode: () => void;
   isNodeIdUnique: (id: string) => boolean;
   updateNodeId: (oldId: string, newId: string) => void;
@@ -39,6 +40,7 @@ type RFState = {
   updateEdgeId: (oldId: string, newId: string) => void;
   updateEdgeTriggerName: (id: string, triggerName: string) => void;
   generateConfig: () => any;
+  generateProjectFile: () => string;
 };
 
 const useNodesStore = create<RFState>((set, get) => ({
@@ -78,11 +80,24 @@ const useNodesStore = create<RFState>((set, get) => ({
   setEdges: (edges) => {
     set({ edges });
   },
-  addNewNode: () => {
-    console.log('addNewNode');
+  addNewBaseNode: () => {
+    console.log('addNewBaseNode');
     const newNode: Node = {
       id: `new_node_${nanoid(4)}`,
       type: 'baseGameNode',
+      position: { x: 250, y: 250 },
+      data: {
+        description: '',
+        image: ''
+      }
+    };
+    set({ nodes: [...get().nodes, newNode] });
+  },
+  addNewAnyStateNode: () => {
+    console.log('addNewAnyStateNode');
+    const newNode: Node = {
+      id: `new_node_${nanoid(4)}`,
+      type: 'anyStateNode',
       position: { x: 250, y: 250 },
       data: {
         description: '',
@@ -162,28 +177,81 @@ const useNodesStore = create<RFState>((set, get) => ({
   generateConfig: () => {
     const nodes = get().nodes;
     const edges = get().edges;
-
+  
     const states = nodes.reduce((acc, node) => {
-      acc[node.id] = {
-        description: node.data.description,
-        transitions: []
-      };
+      if (node.type !== 'anyStateNode') {
+        acc[node.id] = {
+          description: node.data.description,
+          transitions: []
+        };
+      }
       return acc;
-    }, {});
-
+    }, {} as Record<string, { description: string, transitions: { to: string, trigger: string }[] }>);
+  
+    const transitionsFromAny: { to: string, trigger: string }[] = [];
+  
     edges.forEach((edge) => {
-      if (states[edge.source]) {
+      if (edge.source && states[edge.source]) {
         states[edge.source].transitions.push({
+          to: edge.target,
+          trigger: edge.data.triggerName
+        });
+      } else if (edge.source && nodes.find(node => node.id === edge.source && node.type === 'anyStateNode')) {
+        transitionsFromAny.push({
           to: edge.target,
           trigger: edge.data.triggerName
         });
       }
     });
-
+  
     return {
-      states
+      states,
+      transitionsFromAny
     };
   },
+  generateProjectFile: () => {
+    const { nodes, edges } = get();
+    const projectData = {
+      nodes: nodes.map(node => ({
+        id: node.id,
+        type: node.type,
+        position: node.position,
+        data: node.data
+      })),
+      edges: edges.map(edge => ({
+        id: edge.id,
+        source: edge.source,
+        target: edge.target,
+        sourceHandle: edge.sourceHandle,
+        targetHandle: edge.targetHandle,
+        type: edge.type,
+        data: edge.data
+      }))
+    };
+    return JSON.stringify(projectData, null, 2);
+  },
+  loadProjectFile: (projectDataString: string) => {
+    const projectData = JSON.parse(projectDataString);
+  
+    const nodes: Node<NodeData>[] = projectData.nodes.map((node: any) => ({
+      id: node.id,
+      type: node.type,
+      position: node.position,
+      data: node.data
+    }));
+    
+    const edges: Edge[] = projectData.edges.map((edge: any) => ({
+      id: edge.id,
+      source: edge.source,
+      target: edge.target,
+      sourceHandle: edge.sourceHandle,
+      targetHandle: edge.targetHandle,
+      type: edge.type,
+      data: edge.data
+    }));
+    
+    set({ nodes, edges });
+  },  
 }));
 
 export default useNodesStore;
