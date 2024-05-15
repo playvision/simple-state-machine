@@ -1,5 +1,5 @@
 import React from 'react';
-import { Callout, Button, Container, Flex, Heading, Text, Box, Blockquote, Separator } from "@radix-ui/themes";
+import { Callout, Button, Container, Flex, Heading, Text, Box, Blockquote, Separator, Link } from "@radix-ui/themes";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 
 import useNodesStore from "../NodeStore.ts";
@@ -24,7 +24,7 @@ const Menu: React.FC = () => {
   return (
     <Flex direction="column" gap="3" style={styles}>
       <Heading as="h2">Welcome to SSM Editor</Heading>
-      <Text as="p" mt={'-4'} size="2" color="gray">by Playvision</Text>
+      <Link href="https://github.com/playvision/simple-state-machine" color="gray" size="2" mt="-4">by Playvision</Link>
 
 
       <Container>
