@@ -1,5 +1,5 @@
 import React from 'react';
-import { Callout, Button, Container, Flex, Heading, Text, Box, Blockquote, Separator, Link } from "@radix-ui/themes";
+import { Callout, Button, Container, Flex, Heading, Box, Separator, Link } from "@radix-ui/themes";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 
 import useNodesStore from "../NodeStore.ts";
@@ -8,11 +8,26 @@ import EditEdgePanel from "./EditEdgePanel.tsx";
 import ExportConfigDialog from './ExportConfigDialog.tsx';
 import ExportProjectButton from './ExportProjectButton.tsx';
 import ImportProjectButton from './ImportProjectButton.tsx';
+import {useReactFlow} from "@xyflow/react";
 
 const Menu: React.FC = () => {
-  const { addNewBaseNode, addNewAnyStateNode, getSelectedNode, getSelectedEdge } = useNodesStore();
+  const { addNewBaseNode, addNewAnyStateNode, getSelectedNode, getSelectedEdge, getLastNode } = useNodesStore();
   const selectedNode = getSelectedNode();
   const selectedEdge = getSelectedEdge();
+  const { setCenter, getZoom } = useReactFlow();
+
+  const createNode = (type: string) => {
+    if (type === 'base') {
+      addNewBaseNode();
+    } else {
+      addNewAnyStateNode();
+    }
+    const lastNode = getLastNode();
+    setCenter(lastNode.position.x, lastNode.position.y, {
+      zoom: getZoom(),
+      duration: 500,
+    });
+  };
 
   const styles: React.CSSProperties = {
     borderRight: "1px solid var(--gray-a7)",
@@ -58,9 +73,8 @@ const Menu: React.FC = () => {
           border: "1px dashed var(--gray-a7)",
         }}
       >
-        <Button onClick={addNewBaseNode}>Add node</Button>
-        <Button onClick={addNewAnyStateNode}>Add new AnyState node</Button>
-
+        <Button onClick={() => { createNode('base') }}>Add node</Button>
+        <Button onClick={() => { createNode('anyState') }}>Add new AnyState node</Button>
       </Flex>
     </Flex>
   );
