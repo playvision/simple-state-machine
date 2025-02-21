@@ -1,23 +1,21 @@
 import { useShallow } from 'zustand/react/shallow';
-import ReactFlow, {
+import {
+  ReactFlow,
   Background,
-  Panel
-} from 'reactflow';
-import 'reactflow/dist/style.css';
+  Controls,
+  Panel,
+  ConnectionMode,
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 import { Box } from '@radix-ui/themes';
 import Menu from './components/Menu.tsx';
-
-
-
 import useNodesStore from './NodeStore.ts';
 import BaseGameNode from './components/BaseGameNode.tsx';
 import BaseGameEdge from './components/BaseGameEdge.tsx';
 import AnyStateNode from './components/AnyStateNode.tsx';
 
-
-
 const nodeTypes = { baseGameNode: BaseGameNode, anyStateNode: AnyStateNode };
-const edgeTypes = { baseGameEdge: BaseGameEdge};
+const edgeTypes = { baseGameEdge: BaseGameEdge };
 
 const selector = (state) => ({
   nodes: state.nodes,
@@ -25,11 +23,11 @@ const selector = (state) => ({
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
+  onReconnect: state.onReconnect,
 });
 
 function Flow() {
-  
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useNodesStore(
+  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onReconnect } = useNodesStore(
     useShallow(selector),
   );
 
@@ -41,19 +39,22 @@ function Flow() {
         edges={edges}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onReconnect={onReconnect}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         fitView
+        connectionMode={ConnectionMode.Loose}
       >
-      <Panel position="top-left" style={{
-        padding: '0px',
-        margin: '0px',
-        height: '100vh',
-        width: '350px',
-      }
-        }>
-        <Menu />
-      </Panel>
+        <Panel position="top-left" style={{
+          padding: '0px',
+          margin: '0px',
+          height: '100vh',
+          width: '350px',
+        }
+          }>
+          <Menu />
+        </Panel>
+        <Controls position="bottom-right" />
         <Background />
       </ReactFlow>
     </Box>
