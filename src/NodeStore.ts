@@ -7,12 +7,14 @@ import {
   Node,
   NodeChange,
   addEdge,
+  reconnectEdge,
   OnNodesChange,
   OnEdgesChange,
   OnConnect,
   applyNodeChanges,
   applyEdgeChanges,
-} from 'reactflow';
+  MarkerType,
+} from '@xyflow/react';
 
 type NodeData = {
   description: string;
@@ -43,6 +45,11 @@ type RFState = {
   generateProjectFile: () => string;
 };
 
+const DEFAULT_MARKER_END = {
+  type: MarkerType.ArrowClosed,
+  color: 'var(--accent-8)',
+};
+
 const useNodesStore = create<RFState>((set, get) => ({
   nodes: [],
   edges: [],
@@ -52,13 +59,11 @@ const useNodesStore = create<RFState>((set, get) => ({
     });
   },
   onEdgesChange: (changes) => {
-    console.log('onEdgesChange');
     set({
       edges: applyEdgeChanges(changes, get().edges),
     });
   },
   onConnect: (params: Edge | Connection) => {
-    console.log('onConnect');
     const newEdge: Edge = {
       id: nanoid(10),
       type: 'baseGameEdge',
@@ -69,9 +74,15 @@ const useNodesStore = create<RFState>((set, get) => ({
       data: {
         triggerName: 'new_trigger_name',
       },
+      markerEnd: DEFAULT_MARKER_END,
     };
     set({
       edges: addEdge(newEdge, get().edges),
+    });
+  },
+  onReconnect: (oldEdge: Edge, newConnection: Connection) => {
+    set({
+      edges: reconnectEdge(oldEdge, newConnection, get().edges),
     });
   },
   setNodes: (nodes) => {
@@ -81,11 +92,15 @@ const useNodesStore = create<RFState>((set, get) => ({
     set({ edges });
   },
   addNewBaseNode: () => {
-    console.log('addNewBaseNode');
+    const nodes = get().nodes;
+    const lastNode = nodes[nodes.length - 1];
+    const position = lastNode
+      ? { x: lastNode.position.x + 100, y: lastNode.position.y + 100 }
+      : { x: 250, y: 250 };
     const newNode: Node = {
       id: `new_node_${nanoid(4)}`,
       type: 'baseGameNode',
-      position: { x: 250, y: 250 },
+      position,
       data: {
         description: '',
         image: ''
@@ -94,7 +109,6 @@ const useNodesStore = create<RFState>((set, get) => ({
     set({ nodes: [...get().nodes, newNode] });
   },
   addNewAnyStateNode: () => {
-    console.log('addNewAnyStateNode');
     const newNode: Node = {
       id: `new_node_${nanoid(4)}`,
       type: 'anyStateNode',
@@ -107,12 +121,10 @@ const useNodesStore = create<RFState>((set, get) => ({
     set({ nodes: [...get().nodes, newNode] });
   },
   removeSelectedNode: () => {
-    console.log('removeSelectedNode');
     const newNodes = get().nodes.filter((node) => !node.selected);
     set({ nodes: newNodes });
   },
   removeSelectedEdge: () => {
-    console.log('removeSelectedEdge');
     const newEdges = get().edges.filter((edge) => !edge.selected);
     set({ edges: newEdges });
   },
@@ -181,12 +193,11 @@ const useNodesStore = create<RFState>((set, get) => ({
     const states = nodes.reduce((acc, node) => {
       if (node.type !== 'anyStateNode') {
         acc[node.id] = {
-          description: node.data.description,
           transitions: []
         };
       }
       return acc;
-    }, {} as Record<string, { description: string, transitions: { to: string, trigger: string }[] }>);
+    }, {} as Record<string, { transitions: { to: string, trigger: string }[] }>);
   
     const transitionsFromAny: { to: string, trigger: string }[] = [];
   
@@ -216,7 +227,7 @@ const useNodesStore = create<RFState>((set, get) => ({
         id: node.id,
         type: node.type,
         position: node.position,
-        data: node.data
+        data: node.data,
       })),
       edges: edges.map(edge => ({
         id: edge.id,
@@ -225,8 +236,9 @@ const useNodesStore = create<RFState>((set, get) => ({
         sourceHandle: edge.sourceHandle,
         targetHandle: edge.targetHandle,
         type: edge.type,
-        data: edge.data
-      }))
+        data: edge.data,
+        markerEnd: edge.markerEnd,
+      })),
     };
     return JSON.stringify(projectData, null, 2);
   },
@@ -244,10 +256,11 @@ const useNodesStore = create<RFState>((set, get) => ({
       id: edge.id,
       source: edge.source,
       target: edge.target,
-      sourceHandle: edge.sourceHandle,
-      targetHandle: edge.targetHandle,
+      sourceHandle: edge.sourceHandle || 'a',
+      targetHandle: edge.targetHandle || 'd',
       type: edge.type,
-      data: edge.data
+      data: edge.data,
+      markerEnd: edge.markerEnd || DEFAULT_MARKER_END,
     }));
     
     set({ nodes, edges });
