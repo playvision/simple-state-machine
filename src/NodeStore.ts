@@ -3,9 +3,7 @@ import { nanoid } from 'nanoid';
 import {
   Connection,
   Edge,
-  EdgeChange,
   Node,
-  NodeChange,
   addEdge,
   reconnectEdge,
   OnNodesChange,
@@ -37,6 +35,7 @@ type RFState = {
   updateNodeData: (id: string, data: Partial<NodeData>) => void;
   removeSelectedEdge: () => void;
   getSelectedNode: () => Node | null;
+  getLastNode: () => Node | null;
   getSelectedEdge: () => Edge | null;
   isEdgeIdUnique: (id: string) => boolean;
   updateEdgeId: (oldId: string, newId: string) => void;
@@ -92,8 +91,7 @@ const useNodesStore = create<RFState>((set, get) => ({
     set({ edges });
   },
   addNewBaseNode: () => {
-    const nodes = get().nodes;
-    const lastNode = nodes[nodes.length - 1];
+    const lastNode = get().getLastNode();
     const position = lastNode
       ? { x: lastNode.position.x + 100, y: lastNode.position.y + 100 }
       : { x: 250, y: 250 };
@@ -109,10 +107,14 @@ const useNodesStore = create<RFState>((set, get) => ({
     set({ nodes: [...get().nodes, newNode] });
   },
   addNewAnyStateNode: () => {
+    const lastNode = get().getLastNode();
+    const position = lastNode
+      ? { x: lastNode.position.x + 100, y: lastNode.position.y + 100 }
+      : { x: 250, y: 250 };
     const newNode: Node = {
       id: `new_node_${nanoid(4)}`,
       type: 'anyStateNode',
-      position: { x: 250, y: 250 },
+      position,
       data: {
         description: '',
         image: ''
@@ -130,6 +132,10 @@ const useNodesStore = create<RFState>((set, get) => ({
   },
   getSelectedNode: () => {
     return get().nodes.find((node) => node.selected) || null;
+  },
+  getLastNode: () => {
+    const nodes = get().nodes;
+    return nodes[nodes.length - 1];
   },
   getSelectedEdge: () => {
     return get().edges.find((edge) => edge.selected) || null;

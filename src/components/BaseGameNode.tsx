@@ -13,15 +13,7 @@ type BaseGameNodeProps = {
 
 const BaseGameNode: React.FC<BaseGameNodeProps> = ({ id, data, isConnectable }) => {
   return (
-    <Box
-      style={{
-        background: "var(--gray-a2)",
-        borderRadius: "var(--radius-3)",
-        padding: 10,
-        maxWidth: "200px",
-        border: "1px solid var(--gray-a5)",
-      }}
-    >
+    <Box>
       <Flex direction="column" gap="3">
         <Heading as="h2">{id}</Heading>
         {data.image && (
