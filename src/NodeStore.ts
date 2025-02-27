@@ -113,7 +113,8 @@ const useNodesStore = create<RFState>((set, get) => ({
       position,
       data: {
         description: '',
-        image: ''
+        image: '',
+        tags: [],
       }
     };
     set({ nodes: [...get().nodes, newNode] });

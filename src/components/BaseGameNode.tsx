@@ -8,6 +8,7 @@ type BaseGameNodeProps = {
   data: {
     description: string;
     image?: string;
+    tags: string[];
   };
   isConnectable: boolean;
 };
