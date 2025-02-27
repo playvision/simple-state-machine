@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Flex, Button, Container } from "@radix-ui/themes";
+import {Flex, Button, CheckboxGroup} from "@radix-ui/themes";
 import useNodesStore from "../../NodeStore.ts";
 import NodeIdField from "./NodeIdField.js";
 import NodeImage from "./NodeImage.js";
@@ -7,6 +7,7 @@ import NodeDescription from "./NodeDescription.js";
 
 export default function EditNodePanel() {
   const {
+    tags,
     getSelectedNode,
     removeSelectedNode,
     isNodeIdUnique,
@@ -22,6 +23,9 @@ export default function EditNodePanel() {
   );
   const [image, setImage] = useState(
     selectedNode ? selectedNode.data.image : ""
+  );
+  const [nodeTags, setNodeTags] = useState(
+    selectedNode ? selectedNode.data.tags : [],
   );
   const [isUnique, setIsUnique] = useState(true);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
@@ -81,7 +85,11 @@ export default function EditNodePanel() {
   const handleSave = () => {
     if (selectedNode && isUnique) {
       updateNodeId(selectedNode.id, newNodeId);
-      updateNodeData(selectedNode.id, { description, image });
+      updateNodeData(selectedNode.id, {
+        description,
+        image,
+        tags: nodeTags,
+      });
     }
   };
 
@@ -97,7 +105,7 @@ export default function EditNodePanel() {
   };
 
   return (
-    <Flex direction="column" gap="3" ref={panelRef}>
+    <Flex direction="column" gap="3" ref={panelRef} flexGrow="1">
       {selectedNode && selectedNode.type !== 'anyStateNode' && (
         <>
           <NodeIdField
@@ -119,9 +127,13 @@ export default function EditNodePanel() {
             handleDescriptionChange={handleDescriptionChange}
             handleDescriptionBlur={handleDescriptionBlur}
           />
+          <CheckboxGroup.Root defaultValue={nodeTags} name="tags" onValueChange={setNodeTags}>
+            {tags.map((tag) =>
+              <CheckboxGroup.Item key={tag.name} value={tag.name} style={{ color: tag.color }}>{tag.name}</CheckboxGroup.Item>
+            )}
+          </CheckboxGroup.Root>
         </>
       )}
-      <Container />
       {selectedNode && selectedNode.type !== 'anyStateNode' && (
         <Button
           variant="soft"

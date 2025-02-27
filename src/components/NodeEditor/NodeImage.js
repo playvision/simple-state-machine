@@ -5,7 +5,7 @@ import { TrashIcon } from "@radix-ui/react-icons";
 const NodeImage = ({ image, handleRemoveImage, handleUploadClick, fileInputRef, handleImageChange }) => (
   <>
     {image ? (
-      <Box style={{ position: "relative", width: "100%", height: "220px" }}>
+      <Box style={{ position: "relative", width: "100%", height: "150px" }}>
         <img
           src={image}
           alt="Node"
@@ -33,7 +33,7 @@ const NodeImage = ({ image, handleRemoveImage, handleUploadClick, fileInputRef, 
           alignItems: "center",
           justifyContent: "center",
           width: "100%",
-          height: "220px",
+          height: "150px",
           borderRadius: "var(--radius-2)",
           border: "2px dashed var(--gray-a7)",
           cursor: "pointer",

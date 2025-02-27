@@ -12,6 +12,7 @@ const NodeDescription = ({ description, isEditingDescription, setIsEditingDescri
 
   return (
     <Box
+      flexGrow="1"
       style={{
         background: "var(--gray-a2)",
         border: "1px dashed var(--gray-a7)",
@@ -30,10 +31,10 @@ const NodeDescription = ({ description, isEditingDescription, setIsEditingDescri
           onChange={handleDescriptionChange}
           onBlur={handleDescriptionBlur}
           ref={textAreaRef}
-          style={{ width: '100%', height: '150px', borderRadius: 'var(--radius-2)' }}
+          style={{ width: '100%', height: 'calc(100% - 22px)', minHeight: "100px", borderRadius: 'var(--radius-2)' }}
         />
       ) : (
-        <ScrollArea style={{ height: '150px', overflow: 'auto', padding: '10px' }}>
+        <ScrollArea type="auto" style={{ height: "calc(100% - 22px)", minHeight: "100px" }}>
           <Text>
             {description}
           </Text>

@@ -14,19 +14,27 @@ import {
   MarkerType,
 } from '@xyflow/react';
 
+type Tag = {
+  name: string;
+  color: string;
+};
+
 type NodeData = {
   description: string;
   image: string; // base64 image
+  tags: string[];
 };
 
 type RFState = {
   nodes: Node[];
   edges: Edge[];
+  tags: Tag[];
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
   onConnect: OnConnect;
   setNodes: (nodes: Node[]) => void;
   setEdges: (edges: Edge[]) => void;
+  setTags: (tags: Tag[]) => void;
   addNewBaseNode: () => void;
   addNewAnyStateNode: () => void;
   removeSelectedNode: () => void;
@@ -52,6 +60,7 @@ const DEFAULT_MARKER_END = {
 const useNodesStore = create<RFState>((set, get) => ({
   nodes: [],
   edges: [],
+  tags: [],
   onNodesChange: (changes) => {
     set({
       nodes: applyNodeChanges(changes, get().nodes),
@@ -89,6 +98,9 @@ const useNodesStore = create<RFState>((set, get) => ({
   },
   setEdges: (edges) => {
     set({ edges });
+  },
+  setTags: (tags) => {
+    set({ tags });
   },
   addNewBaseNode: () => {
     const lastNode = get().getLastNode();
@@ -193,17 +205,17 @@ const useNodesStore = create<RFState>((set, get) => ({
     set({ edges });
   },
   generateConfig: () => {
-    const nodes = get().nodes;
-    const edges = get().edges;
+    const { nodes, edges } = get();
   
     const states = nodes.reduce((acc, node) => {
       if (node.type !== 'anyStateNode') {
         acc[node.id] = {
-          transitions: []
+          transitions: [],
+          tags: node.data.tags || [],
         };
       }
       return acc;
-    }, {} as Record<string, { transitions: { to: string, trigger: string }[] }>);
+    }, {} as Record<string, { transitions: { to: string, trigger: string }[], tags: string[] }>);
   
     const transitionsFromAny: { to: string, trigger: string }[] = [];
   
@@ -227,7 +239,7 @@ const useNodesStore = create<RFState>((set, get) => ({
     };
   },
   generateProjectFile: () => {
-    const { nodes, edges } = get();
+    const { nodes, edges, tags } = get();
     const projectData = {
       nodes: nodes.map(node => ({
         id: node.id,
@@ -244,6 +256,10 @@ const useNodesStore = create<RFState>((set, get) => ({
         type: edge.type,
         data: edge.data,
         markerEnd: edge.markerEnd,
+      })),
+      tags: tags.map(tag => ({
+        name: tag.name,
+        color: tag.color,
       })),
     };
     return JSON.stringify(projectData, null, 2);
@@ -268,9 +284,14 @@ const useNodesStore = create<RFState>((set, get) => ({
       data: edge.data,
       markerEnd: edge.markerEnd || DEFAULT_MARKER_END,
     }));
+
+    const tags: Tag[] = projectData.tags.map((tag: any) => ({
+      name: tag.name,
+      color: tag.color,
+    }));
     
-    set({ nodes, edges });
-  },  
+    set({ nodes, edges, tags });
+  },
 }));
 
 export default useNodesStore;
