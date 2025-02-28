@@ -69,10 +69,10 @@ const TagsEditor: React.FC = () => {
     for (const node of nodes) {
       if (node.data.tag === oldName) {
         node.data.tag = name;
-      } else {
+      } else if (node.data.tags) {
         const tagIndex = node.data.tags?.findIndex((tag) => tag === oldName);
         if (tagIndex >= 0) {
-          [...node.data.tags].splice(tagIndex, 1, name);
+          node.data.tags.splice(tagIndex, 1, name);
         }
       }
       newNodes.push(node);
@@ -108,7 +108,8 @@ const TagsEditor: React.FC = () => {
                   <AlertDialog.Content maxWidth="450px">
                     <AlertDialog.Title>Delete tag</AlertDialog.Title>
                     <AlertDialog.Description size="2">
-                      Delete tag {tag.name} and all its mentions in nodes? This action cannot be undone.
+                      Delete tag <b>{tag.name}</b> and all its mentions in nodes?<br/>
+                      This action cannot be undone.
                     </AlertDialog.Description>
 
                     <Flex gap="3" mt="4" justify="end">
@@ -139,7 +140,12 @@ const TagsEditor: React.FC = () => {
             {editingTagName !== tag.name && (
               <>
                 <Box></Box>
-                <Text style={{ color: tag.color }}>{tag.name}</Text>
+                <Text style={{ color: tag.color }} onClick={() => {
+                  setEditingTextInvalid(false);
+                  setEditingTagName(tag.name);
+                  setEditingColor(tag.color);
+                  setEditingText(tag.name);
+                }}>{tag.name}</Text>
                 <IconButton variant="ghost" color="gray" radius="full" style={{ cursor: "pointer" }} onClick={() => {
                   setEditingTextInvalid(false);
                   setEditingTagName(tag.name);
