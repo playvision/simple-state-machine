@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Flex, ScrollArea, Text, Code } from "@radix-ui/themes";
+import { Button, Flex, ScrollArea, Code } from "@radix-ui/themes";
 import { Dialog } from '@radix-ui/themes';
 import useNodesStore from "../NodeStore.ts";
 
@@ -35,12 +35,12 @@ const ExportConfigDialog: React.FC = () => {
         <Dialog.Trigger>
           <Button style={{ display: 'none' }}>Hidden Trigger</Button>
         </Dialog.Trigger>
-        <Dialog.Content style={{ width: '90vw', height: '90vh', overflow: 'hidden' }}>
+        <Dialog.Content style={{ width: '90vw', maxHeight: '90vh', overflow: 'hidden' }}>
           <Dialog.Title>Export Config</Dialog.Title>
           <Dialog.Description size="2" mb="4">
             Below is the generated configuration for your state machine. You can review it before downloading.
           </Dialog.Description>
-          <ScrollArea type="always" scrollbars="vertical" style={{ height: '70vh', width: '100%' }}>
+          <ScrollArea type="always" scrollbars="vertical" style={{ width: '100%' }}>
             <Code style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
               {config}
             </Code>
