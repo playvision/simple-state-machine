@@ -1,19 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
-import {Flex, Button, CheckboxGroup} from "@radix-ui/themes";
+import {Flex, Button, CheckboxGroup, AlertDialog} from "@radix-ui/themes";
 import useNodesStore from "../../NodeStore.ts";
 import NodeIdField from "./NodeIdField.js";
 import NodeImage from "./NodeImage.js";
 import NodeDescription from "./NodeDescription.js";
+import {useReactFlow} from "@xyflow/react";
 
 export default function EditNodePanel() {
   const {
     tags,
     getSelectedNode,
-    removeSelectedNode,
     isNodeIdUnique,
     updateNodeId,
     updateNodeData,
   } = useNodesStore();
+  const { deleteElements } = useReactFlow();
+
   const selectedNode = getSelectedNode();
   const [newNodeId, setNewNodeId] = useState(
     selectedNode ? selectedNode.id : ""
@@ -104,6 +106,12 @@ export default function EditNodePanel() {
     }
   };
 
+  const removeSelectedNode = () => {
+    void deleteElements({
+      nodes: [selectedNode],
+    });
+  };
+
   return (
     <Flex direction="column" gap="3" ref={panelRef} flexGrow="1">
       {selectedNode && selectedNode.type === 'baseGameNode' && (
@@ -144,14 +152,38 @@ export default function EditNodePanel() {
           Save
         </Button>
       )}
-      <Button
-        variant="soft"
-        disabled={!selectedNode}
-        color="red"
-        onClick={removeSelectedNode}
-      >
-        Remove selected node
-      </Button>
+
+      <AlertDialog.Root>
+        <AlertDialog.Trigger>
+          <Button
+            variant="soft"
+            disabled={!selectedNode}
+            color="red"
+          >
+            Remove selected node
+          </Button>
+        </AlertDialog.Trigger>
+        <AlertDialog.Content maxWidth="450px">
+          <AlertDialog.Title>Delete node</AlertDialog.Title>
+          <AlertDialog.Description size="2">
+            Delete node <b>{selectedNode.id}</b> and all its connections?<br/>
+            This action cannot be undone.
+          </AlertDialog.Description>
+
+          <Flex gap="3" mt="4" justify="end">
+            <AlertDialog.Cancel>
+              <Button variant="soft" color="gray">
+                Cancel
+              </Button>
+            </AlertDialog.Cancel>
+            <AlertDialog.Action>
+              <Button variant="solid" color="red" onClick={removeSelectedNode}>
+                Delete
+              </Button>
+            </AlertDialog.Action>
+          </Flex>
+        </AlertDialog.Content>
+      </AlertDialog.Root>
     </Flex>
   );
 }

@@ -37,11 +37,9 @@ type RFState = {
   setEdges: (edges: Edge[]) => void;
   setTags: (tags: Tag[]) => void;
   addNewNode: (type: string, data: any) => void;
-  removeSelectedNode: () => void;
   isNodeIdUnique: (id: string) => boolean;
   updateNodeId: (oldId: string, newId: string) => void;
   updateNodeData: (id: string, data: Partial<NodeData>) => void;
-  removeSelectedEdge: () => void;
   getSelectedNode: () => Node | null;
   getLastNode: () => Node | null;
   getSelectedEdge: () => Edge | null;
@@ -114,14 +112,6 @@ const useNodesStore = create<RFState>((set, get) => ({
       data,
     };
     set({ nodes: [...get().nodes, newNode] });
-  },
-  removeSelectedNode: () => {
-    const newNodes = get().nodes.filter((node) => !node.selected);
-    set({ nodes: newNodes });
-  },
-  removeSelectedEdge: () => {
-    const newEdges = get().edges.filter((edge) => !edge.selected);
-    set({ edges: newEdges });
   },
   getSelectedNode: () => {
     return get().nodes.find((node) => node.selected) || null;

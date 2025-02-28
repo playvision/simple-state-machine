@@ -108,7 +108,8 @@ const TagsEditor: React.FC = () => {
                   <AlertDialog.Content maxWidth="450px">
                     <AlertDialog.Title>Delete tag</AlertDialog.Title>
                     <AlertDialog.Description size="2">
-                      Delete tag {tag.name} and all its mentions in nodes? This action cannot be undone.
+                      Delete tag <b>{tag.name}</b> and all its mentions in nodes?<br/>
+                      This action cannot be undone.
                     </AlertDialog.Description>
 
                     <Flex gap="3" mt="4" justify="end">

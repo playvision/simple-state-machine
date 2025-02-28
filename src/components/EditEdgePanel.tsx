@@ -8,17 +8,17 @@ import {
   TextField,
 } from "@radix-ui/themes";
 import useNodesStore from "../NodeStore.ts";
+import {useReactFlow} from "@xyflow/react";
 
 const EditEdgePanel: React.FC = () => {
   const {
     getSelectedEdge,
-    removeSelectedEdge,
     updateEdgeTriggerName,
   } = useNodesStore((state) => ({
     getSelectedEdge: state.getSelectedEdge,
-    removeSelectedEdge: state.removeSelectedEdge,
     updateEdgeTriggerName: state.updateEdgeTriggerName,
   }));
+  const { deleteElements } = useReactFlow();
 
   const selectedEdge = getSelectedEdge();
 
@@ -40,6 +40,12 @@ const EditEdgePanel: React.FC = () => {
     if (selectedEdge) {
       updateEdgeTriggerName(selectedEdge.id, triggerName);
     }
+  };
+
+  const removeSelectedEdge = () => {
+    void deleteElements({
+      edges: [selectedEdge],
+    });
   };
 
   return (
