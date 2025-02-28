@@ -40,6 +40,7 @@ export default function EditNodePanel() {
       setNewNodeId(selectedNode.id);
       setDescription(selectedNode.data.description);
       setImage(selectedNode.data.image);
+      setNodeTags(selectedNode.data.tags || []);
     }
   }, [selectedNode]);
 
@@ -135,7 +136,14 @@ export default function EditNodePanel() {
             handleDescriptionChange={handleDescriptionChange}
             handleDescriptionBlur={handleDescriptionBlur}
           />
-          <CheckboxGroup.Root defaultValue={nodeTags} name="tags" onValueChange={setNodeTags}>
+          <CheckboxGroup.Root defaultValue={nodeTags} name="tags" onValueChange={(value) => {
+            setNodeTags(value);
+            updateNodeData(selectedNode.id, {
+              description: selectedNode.description,
+              image: selectedNode.image,
+              tags: value,
+            });
+          }}>
             {tags.map((tag) =>
               <CheckboxGroup.Item key={tag.name} value={tag.name} style={{ color: tag.color }}>{tag.name}</CheckboxGroup.Item>
             )}
