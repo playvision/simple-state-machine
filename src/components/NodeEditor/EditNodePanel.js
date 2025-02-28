@@ -25,7 +25,7 @@ export default function EditNodePanel() {
     selectedNode ? selectedNode.data.image : ""
   );
   const [nodeTags, setNodeTags] = useState(
-    selectedNode ? selectedNode.data.tags : [],
+    selectedNode ? (selectedNode.data.tags || []) : [],
   );
   const [isUnique, setIsUnique] = useState(true);
   const [isEditingDescription, setIsEditingDescription] = useState(false);

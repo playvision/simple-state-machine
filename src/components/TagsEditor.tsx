@@ -26,7 +26,7 @@ const TagsEditor: React.FC = () => {
   const removeTag = (name: string) => {
     setTags(tags.filter((tag) => tag.name !== name));
     setNodes(nodes.map((node) => {
-      const tagIndex = node.data.tags.findIndex((tag) => tag === name);
+      const tagIndex = node.data.tags?.findIndex((tag) => tag === name);
       if (tagIndex >= 0) {
         node.data.tags.splice(tagIndex, 1);
       }
@@ -57,7 +57,7 @@ const TagsEditor: React.FC = () => {
         : tag;
     }));
     setNodes(nodes.map((node) => {
-      const tagIndex = node.data.tags.findIndex((tag) => tag === oldName);
+      const tagIndex = node.data.tags?.findIndex((tag) => tag === oldName);
       if (tagIndex >= 0) {
         node.data.tags.splice(tagIndex, 1, name);
       }
