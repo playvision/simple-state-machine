@@ -35,7 +35,7 @@ const BaseGameNode: React.FC<BaseGameNodeProps> = ({ id, data, isConnectable }) 
         <Text>{data.description}</Text>
         <Flex justify="center" gap="1" wrap="wrap">
           {tags.map((tag) => {
-            if (!data.tags.some((nodeTag) => nodeTag === tag.name)) {
+            if (!data.tags || !data.tags.some((nodeTag) => nodeTag === tag.name)) {
               return;
             }
             return (<Text key={tag.name} size="1" style={{

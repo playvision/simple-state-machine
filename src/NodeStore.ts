@@ -22,7 +22,7 @@ type Tag = {
 type NodeData = {
   description: string;
   image: string; // base64 image
-  tags: string[];
+  tags?: string[];
 };
 
 type RFState = {
@@ -286,10 +286,10 @@ const useNodesStore = create<RFState>((set, get) => ({
       markerEnd: edge.markerEnd || DEFAULT_MARKER_END,
     }));
 
-    const tags: Tag[] = projectData.tags.map((tag: any) => ({
+    const tags: Tag[] = projectData.tags?.map((tag: any) => ({
       name: tag.name,
       color: tag.color,
-    }));
+    })) || [];
     
     set({ nodes, edges, tags });
   },
