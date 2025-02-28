@@ -24,14 +24,19 @@ const TagsEditor: React.FC = () => {
   };
 
   const removeTag = (name: string) => {
-    setTags(tags.filter((tag) => tag.name !== name));
-    setNodes(nodes.map((node) => {
+    const newNodes = [];
+    for (const node of nodes) {
+      if (node.data.tag === name) {
+        continue;
+      }
       const tagIndex = node.data.tags?.findIndex((tag) => tag === name);
       if (tagIndex >= 0) {
-        node.data.tags.splice(tagIndex, 1);
+        [...node.data.tags].splice(tagIndex, 1);
       }
-      return node;
-    }));
+      newNodes.push(node);
+    }
+    setNodes(newNodes);
+    setTags(tags.filter((tag) => tag.name !== name));
   };
 
   const [editingTagName, setEditingTagName] = useState('');
@@ -56,13 +61,23 @@ const TagsEditor: React.FC = () => {
         }
         : tag;
     }));
-    setNodes(nodes.map((node) => {
-      const tagIndex = node.data.tags?.findIndex((tag) => tag === oldName);
-      if (tagIndex >= 0) {
-        node.data.tags.splice(tagIndex, 1, name);
+    if (editingTextInvalid || oldName === name) {
+      return;
+    }
+
+    const newNodes = [];
+    for (const node of nodes) {
+      if (node.data.tag === oldName) {
+        node.data.tag = name;
+      } else {
+        const tagIndex = node.data.tags?.findIndex((tag) => tag === oldName);
+        if (tagIndex >= 0) {
+          [...node.data.tags].splice(tagIndex, 1, name);
+        }
       }
-      return node;
-    }));
+      newNodes.push(node);
+    }
+    setNodes(newNodes);
   };
 
   return (

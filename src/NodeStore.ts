@@ -23,6 +23,7 @@ type NodeData = {
   description: string;
   image: string; // base64 image
   tags?: string[];
+  tag?: string;
 };
 
 type RFState = {
@@ -35,8 +36,7 @@ type RFState = {
   setNodes: (nodes: Node[]) => void;
   setEdges: (edges: Edge[]) => void;
   setTags: (tags: Tag[]) => void;
-  addNewBaseNode: () => void;
-  addNewAnyStateNode: () => void;
+  addNewNode: (type: string, data: any) => void;
   removeSelectedNode: () => void;
   isNodeIdUnique: (id: string) => boolean;
   updateNodeId: (oldId: string, newId: string) => void;
@@ -102,36 +102,16 @@ const useNodesStore = create<RFState>((set, get) => ({
   setTags: (tags) => {
     set({ tags });
   },
-  addNewBaseNode: () => {
+  addNewNode: (type: string, data: any) => {
     const lastNode = get().getLastNode();
     const position = lastNode
       ? { x: lastNode.position.x + 100, y: lastNode.position.y + 100 }
       : { x: 250, y: 250 };
     const newNode: Node = {
       id: `new_node_${nanoid(4)}`,
-      type: 'baseGameNode',
+      type,
       position,
-      data: {
-        description: '',
-        image: '',
-        tags: [],
-      }
-    };
-    set({ nodes: [...get().nodes, newNode] });
-  },
-  addNewAnyStateNode: () => {
-    const lastNode = get().getLastNode();
-    const position = lastNode
-      ? { x: lastNode.position.x + 100, y: lastNode.position.y + 100 }
-      : { x: 250, y: 250 };
-    const newNode: Node = {
-      id: `new_node_${nanoid(4)}`,
-      type: 'anyStateNode',
-      position,
-      data: {
-        description: '',
-        image: ''
-      }
+      data,
     };
     set({ nodes: [...get().nodes, newNode] });
   },
@@ -209,7 +189,7 @@ const useNodesStore = create<RFState>((set, get) => ({
     const { nodes, edges } = get();
   
     const states = nodes.reduce((acc, node) => {
-      if (node.type !== 'anyStateNode') {
+      if (node.type === 'baseGameNode') {
         acc[node.id] = {
           transitions: [],
           tags: node.data.tags || [],
@@ -219,6 +199,7 @@ const useNodesStore = create<RFState>((set, get) => ({
     }, {} as Record<string, { transitions: { to: string, trigger: string }[], tags: string[] }>);
   
     const transitionsFromAny: { to: string, trigger: string }[] = [];
+    const transitionsByTag: Record<string, { transitions: { to: string, trigger: string }[] }> = {};
   
     edges.forEach((edge) => {
       if (edge.source && states[edge.source]) {
@@ -226,17 +207,44 @@ const useNodesStore = create<RFState>((set, get) => ({
           to: edge.target,
           trigger: edge.data.triggerName
         });
-      } else if (edge.source && nodes.find(node => node.id === edge.source && node.type === 'anyStateNode')) {
+        return;
+      }
+      if (!edge.source) {
+        return;
+      }
+
+      const sourceNode = nodes.find(node => node.id === edge.source);
+      if (!sourceNode) {
+        return;
+      }
+
+      if (sourceNode.type === 'anyStateNode') {
         transitionsFromAny.push({
           to: edge.target,
           trigger: edge.data.triggerName
         });
+      } else if (sourceNode.type === 'tagNode') {
+        const tagTransitions = transitionsByTag[sourceNode.data.tag];
+        if (tagTransitions) {
+          transitionsByTag[sourceNode.data.tag].transitions.push({
+            to: edge.target,
+            trigger: edge.data.triggerName
+          });
+        } else {
+          transitionsByTag[sourceNode.data.tag] = {
+            transitions: [{
+              to: edge.target,
+              trigger: edge.data.triggerName
+            }],
+          };
+        }
       }
     });
   
     return {
       states,
-      transitionsFromAny
+      transitionsFromAny,
+      transitionsByTag,
     };
   },
   generateProjectFile: () => {
