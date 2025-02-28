@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/simple-state-machine/static/css/main.4363cf9d.css",
-    "main.js": "/simple-state-machine/static/js/main.81203ee0.js",
+    "main.css": "/simple-state-machine/static/css/main.87668c15.css",
+    "main.js": "/simple-state-machine/static/js/main.60e5d7bb.js",
     "static/js/453.bef24447.chunk.js": "/simple-state-machine/static/js/453.bef24447.chunk.js",
     "index.html": "/simple-state-machine/index.html",
-    "main.4363cf9d.css.map": "/simple-state-machine/static/css/main.4363cf9d.css.map",
-    "main.81203ee0.js.map": "/simple-state-machine/static/js/main.81203ee0.js.map",
+    "main.87668c15.css.map": "/simple-state-machine/static/css/main.87668c15.css.map",
+    "main.60e5d7bb.js.map": "/simple-state-machine/static/js/main.60e5d7bb.js.map",
     "453.bef24447.chunk.js.map": "/simple-state-machine/static/js/453.bef24447.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.4363cf9d.css",
-    "static/js/main.81203ee0.js"
+    "static/css/main.87668c15.css",
+    "static/js/main.60e5d7bb.js"
   ]
 }
