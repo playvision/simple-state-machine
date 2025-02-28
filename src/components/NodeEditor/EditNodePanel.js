@@ -136,7 +136,7 @@ export default function EditNodePanel() {
             handleDescriptionChange={handleDescriptionChange}
             handleDescriptionBlur={handleDescriptionBlur}
           />
-          <CheckboxGroup.Root defaultValue={nodeTags} name="tags" onValueChange={(value) => {
+          <CheckboxGroup.Root value={nodeTags} name="tags" onValueChange={(value) => {
             setNodeTags(value);
             updateNodeData(selectedNode.id, {
               description: selectedNode.description,
