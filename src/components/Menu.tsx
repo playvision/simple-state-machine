@@ -1,5 +1,5 @@
-import React from 'react';
-import {Callout, Button, Flex, Heading, Separator, Link, ScrollArea} from "@radix-ui/themes";
+import React, {useState} from 'react';
+import {Callout, Button, Flex, Heading, Separator, Link, ScrollArea, Dialog, RadioGroup} from "@radix-ui/themes";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 
 import useNodesStore from "../NodeStore.ts";
@@ -12,17 +12,27 @@ import {useReactFlow} from "@xyflow/react";
 import TagsEditor from "./TagsEditor.tsx";
 
 const Menu: React.FC = () => {
-  const { addNewBaseNode, addNewAnyStateNode, getSelectedNode, getSelectedEdge, getLastNode } = useNodesStore();
+  const { tags, addNewNode, getSelectedNode, getSelectedEdge, getLastNode } = useNodesStore();
   const selectedNode = getSelectedNode();
   const selectedEdge = getSelectedEdge();
   const { setCenter, getZoom } = useReactFlow();
 
+  const [tagNodeIndex, setTagNodeIndex] = useState(0);
+
   const createNode = (type: string) => {
-    if (type === 'base') {
-      addNewBaseNode();
+    if (type === 'anyState') {
+      addNewNode('anyStateNode', {});
+    } else if (type === 'tag') {
+      addNewNode('tagNode', { tag: tags[tagNodeIndex].name });
+      setTagNodeIndex(0);
     } else {
-      addNewAnyStateNode();
+      addNewNode('baseGameNode', {
+        description: '',
+        image: '',
+        tags: [],
+      });
     }
+
     const lastNode = getLastNode();
     setCenter(lastNode.position.x, lastNode.position.y, {
       zoom: getZoom(),
@@ -75,6 +85,37 @@ const Menu: React.FC = () => {
         >
           <Button onClick={() => { createNode('base') }}>Add node</Button>
           <Button onClick={() => { createNode('anyState') }}>Add new AnyState node</Button>
+          {!!tags.length && (
+            <Dialog.Root>
+              <Dialog.Trigger>
+                <Button>Add new Tag node</Button>
+              </Dialog.Trigger>
+
+              <Dialog.Content maxWidth="300px">
+                <Dialog.Title>New tag node</Dialog.Title>
+                <Dialog.Description size="2" mb="4">
+                  Choose tag:
+                </Dialog.Description>
+
+                <RadioGroup.Root defaultValue={tagNodeIndex} name="tags" onValueChange={setTagNodeIndex}>
+                  {tags.map((tag, index) =>
+                    <RadioGroup.Item key={tag.name} value={index} style={{ color: tag.color }}>{tag.name}</RadioGroup.Item>
+                  )}
+                </RadioGroup.Root>
+
+                <Flex gap="3" mt="4" justify="end">
+                  <Dialog.Close>
+                    <Button variant="soft" color="gray">
+                      Cancel
+                    </Button>
+                  </Dialog.Close>
+                  <Dialog.Close>
+                    <Button onClick={() => { createNode('tag') }}>Create</Button>
+                  </Dialog.Close>
+                </Flex>
+              </Dialog.Content>
+            </Dialog.Root>
+          )}
         </Flex>
       </Flex>
     </ScrollArea>

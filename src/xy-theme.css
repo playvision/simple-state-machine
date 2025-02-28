@@ -61,7 +61,8 @@
     box-shadow: var(--xy-node-boxshadow-default);
 }
 
-.react-flow__node-anyStateNode {
+.react-flow__node-anyStateNode,
+.react-flow__node-tagNode {
     background: var(--green-a2);
     border-radius: var(--radius-3);
     padding: 10px;

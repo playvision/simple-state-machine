@@ -106,7 +106,7 @@ export default function EditNodePanel() {
 
   return (
     <Flex direction="column" gap="3" ref={panelRef} flexGrow="1">
-      {selectedNode && selectedNode.type !== 'anyStateNode' && (
+      {selectedNode && selectedNode.type === 'baseGameNode' && (
         <>
           <NodeIdField
             newNodeId={newNodeId}

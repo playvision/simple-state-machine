@@ -14,8 +14,9 @@ import useNodesStore from './NodeStore.ts';
 import BaseGameNode from './components/BaseGameNode.tsx';
 import BaseGameEdge from './components/BaseGameEdge.tsx';
 import AnyStateNode from './components/AnyStateNode.tsx';
+import TagNode from './components/TagNode.tsx';
 
-const nodeTypes = { baseGameNode: BaseGameNode, anyStateNode: AnyStateNode };
+const nodeTypes = { baseGameNode: BaseGameNode, anyStateNode: AnyStateNode, tagNode: TagNode };
 const edgeTypes = { baseGameEdge: BaseGameEdge };
 
 const selector = (state) => ({
