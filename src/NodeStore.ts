@@ -214,6 +214,10 @@ const useNodesStore = create<RFState>((set, get) => ({
       }
 
       const sourceNode = nodes.find(node => node.id === edge.source);
+      if (!sourceNode) {
+        return;
+      }
+
       if (sourceNode.type === 'anyStateNode') {
         transitionsFromAny.push({
           to: edge.target,
